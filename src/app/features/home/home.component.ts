@@ -5,6 +5,7 @@ import { MatCard, MatCardContent } from "@angular/material/card";
 import { CommonModule } from '@angular/common';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatBadgeModule } from '@angular/material/badge';
+import { Categoria } from '../../core/models/categoria.models';
 
 
 
@@ -51,8 +52,8 @@ produtosDestaque = [
   pesquisar() { /* integrar com SearchService */ }
   verOfertas() { this.router.navigate(['/ofertas']); }
   explorarCatalogo() { this.router.navigate(['/produtos']); }
-  irParaCategoria(cat: any) { this.router.navigate(['/categoria', cat.nome]); }
-  verPromocao() { this.router.navigate(['/promocoes']); }
+  irParaCategoria(cat: Categoria) { this.router.navigate(['/categoria', cat.nome]);
+ }  verPromocao() { this.router.navigate(['/promocoes']); }
 
   adicionarAoCarrinho(prod: any) {
     this.cartCount++;

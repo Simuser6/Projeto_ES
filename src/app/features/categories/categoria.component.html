@@ -16,7 +16,7 @@
     <mat-card class="prod-card" *ngFor="let prod of produtos">
       <div class="prod-img">
         <span class="prod-emoji">{{ prod.emoji }}</span>
-        <span class="prod-tag" *ngIf="prod.tag" [ngClass]="'tag-' + prod.tag.tipo">
+        <span *ngIf="prod.tag" [class]="'prod-tag tag-' + prod.tag.tipo">
           {{ prod.tag.label }}
         </span>
       </div>

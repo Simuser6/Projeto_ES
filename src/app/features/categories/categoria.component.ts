@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Produto } from '../../../app/core/models/produto.models';
-import { ProdutoService } from '../../../app/core/services/produto.services';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Produto } from '../../core/models/produto.models';
+import { ProdutoService } from '../../core/services/produto.services';
+import { MatCard, MatCardContent } from "@angular/material/card";
+import { MatIcon } from "@angular/material/icon";
+import { DecimalPipe, CommonModule } from '@angular/common';
+import { MaterialModule } from '../../shared/material/material.module';
 
 @Component({
   selector: 'app-categoria',
+  standalone: true,
+  imports: [CommonModule, RouterModule, MaterialModule, DecimalPipe],
   templateUrl: './categoria.component.html',
   styleUrls: ['./categoria.component.scss']
 })
+
 export class CategoriaComponent implements OnInit {
   nomeCategoria = '';
   produtos: Produto[] = [];
