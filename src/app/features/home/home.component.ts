@@ -1,5 +1,5 @@
 import { Component  } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
 import { MatCard, MatCardContent } from "@angular/material/card";
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,7 @@ import { Categoria } from '../../core/models/categoria.models';
     MatCard, 
     MatCardContent, 
     CommonModule, 
+    RouterModule,
     MatToolbar, 
     MatBadgeModule]
 })

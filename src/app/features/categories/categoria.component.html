@@ -1,39 +1,50 @@
 <section class="section">
   <div class="section-header">
-    <h2 class="section-title">{{ nomeCategoria }}</h2>
+    <h2 class="section-title">{{ nomeCategoria || 'Escolha uma categoria' }}</h2>
     <a class="section-link" routerLink="/">
       <mat-icon inline>arrow_back</mat-icon> Voltar
     </a>
   </div>
 
-  <div *ngIf="carregando" class="loading">Carregando produtos...</div>
-
-  <div *ngIf="!carregando && produtos.length === 0" class="empty-state">
-    Nenhum produto encontrado em "{{ nomeCategoria }}".
+  <div *ngIf="!nomeCategoria" class="category-select">
+    <p>Selecione uma categoria para ver os produtos:</p>
+    <div class="category-buttons">
+      <button mat-stroked-button *ngFor="let cat of categorias" (click)="selecionarCategoria(cat.nome)">
+        {{ cat.nome }}
+      </button>
+    </div>
   </div>
 
-  <div class="products-grid" *ngIf="!carregando && produtos.length > 0">
-    <mat-card class="prod-card" *ngFor="let prod of produtos">
-      <div class="prod-img">
-        <span class="prod-emoji">{{ prod.emoji }}</span>
-        <span *ngIf="prod.tag" [class]="'prod-tag tag-' + prod.tag.tipo">
-          {{ prod.tag.label }}
-        </span>
-      </div>
-      <mat-card-content class="prod-info">
-        <p class="prod-name">{{ prod.nome }}</p>
-        <p class="prod-brand">{{ prod.marca }}</p>
-        <div class="prod-footer">
-          <div class="prod-prices">
-            <span class="prod-old" *ngIf="prod.precoAntigo">R$ {{ prod.precoAntigo | number:'1.2-2' }}</span>
-            <span class="prod-price">R$ {{ prod.preco | number:'1.2-2' }}</span>
-          </div>
-          <button mat-mini-fab class="add-btn" aria-label="Adicionar ao carrinho"
-                  (click)="adicionarAoCarrinho(prod)">
-            <mat-icon>add</mat-icon>
-          </button>
+  <div *ngIf="nomeCategoria">
+    <div *ngIf="carregando" class="loading">Carregando produtos...</div>
+
+    <div *ngIf="!carregando && produtos.length === 0" class="empty-state">
+      Nenhum produto encontrado em "{{ nomeCategoria }}".
+    </div>
+
+    <div class="products-grid" *ngIf="!carregando && produtos.length > 0">
+      <mat-card class="prod-card" *ngFor="let prod of produtos">
+        <div class="prod-img">
+          <span class="prod-emoji">{{ prod.emoji }}</span>
+          <span *ngIf="prod.tag" [class]="'prod-tag tag-' + prod.tag.tipo">
+            {{ prod.tag.label }}
+          </span>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <mat-card-content class="prod-info">
+          <p class="prod-name">{{ prod.nome }}</p>
+          <p class="prod-brand">{{ prod.marca }}</p>
+          <div class="prod-footer">
+            <div class="prod-prices">
+              <span class="prod-old" *ngIf="prod.precoAntigo">R$ {{ prod.precoAntigo | number:'1.2-2' }}</span>
+              <span class="prod-price">R$ {{ prod.preco | number:'1.2-2' }}</span>
+            </div>
+            <button mat-mini-fab class="add-btn" aria-label="Adicionar ao carrinho"
+                    (click)="adicionarAoCarrinho(prod)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </section>
