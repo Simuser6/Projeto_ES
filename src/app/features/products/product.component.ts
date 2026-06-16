@@ -49,21 +49,20 @@ export class ProductComponent implements OnInit {
 
   get produtoEmoji(): string {
     if (!this.produto) {
-      return '🖥️';
+      return '📦';
     }
 
-    switch (this.produto.tipoProduto) {
-      case 'CPU':
-        return '🧠';
-      case 'PLACA_VIDEO':
-        return '🎮';
-      case 'ARMAZENAMENTO':
-        return '💾';
-      case 'MEMORIA':
-        return '🧩';
-      default:
-        return '🖥️';
+    if (!this.produto.categoria) {
+      return '📦';
     }
+
+    const categoria = this.produto.categoria.toLowerCase();
+    if (categoria.includes('cpu') || categoria.includes('processador')) return '⚙️';
+    if (categoria.includes('video') || categoria.includes('gpu')) return '🎮';
+    if (categoria.includes('armazen') || categoria.includes('disco') || categoria.includes('ssd')) return '💾';
+    if (categoria.includes('memoria') || categoria.includes('ram')) return '🧠';
+    
+    return '📦';
   }
 
   adicionarAoCarrinho() {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Produto2 as Produto } from '../../core/models/produto.models';
+import { Produto } from '../../core/models/produto.models';
 import { Categoria } from '../../core/models/categoria.models';
 import { ProductService } from '../../core/services/product.service';
 import { MatCard, MatCardContent } from "@angular/material/card";

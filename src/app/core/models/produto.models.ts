@@ -1,47 +1,36 @@
-export interface Produto2 {
+export type ProdutoStatus = 'ATIVO' | 'INATIVO';
+
+export interface Produto {
   id: number;
   nome: string;
-  marca: string;
+  descricao?: string;
   preco: number;
-  precoAntigo?: number | null;
-  emoji: string;
-  tag?: { tipo: 'sale' | 'new'; label: string } | null;
-  categoria: string;
-}
-
-
-export interface ProdutoBase {
   sku: string;
+  categoria?: string;
+  estoqueMinimo?: number;
+  quantidadeDisponivel?: number;
+  ativo: boolean;
+  imagemUrl?: string;
+  criadoEm?: string;
+  atualizadoEm?: string;
+}
+
+export interface ProdutoCreateRequest {
   nome: string;
-  precoVenda: number;
-  qtdEstoque: number;
-  qtdMinima: number;
-  tipoProduto: 'CPU' | 'PLACA_VIDEO' | 'ARMAZENAMENTO' | 'MEMORIA';
-  descricaoTecnica?: string;
+  descricao?: string;
+  preco: number;
+  sku: string;
+  categoria?: string;
+  estoqueMinimo?: number;
+  ativo: boolean;
 }
 
-export interface CPU extends ProdutoBase {
-  tipoProduto: 'CPU';
-  arquitetura: string;
-  nucleos: number;
+export interface ProdutoUpdateRequest {
+  nome?: string;
+  descricao?: string;
+  preco?: number;
+  sku?: string;
+  categoria?: string;
+  estoqueMinimo?: number;
+  ativo?: boolean;
 }
-
-export interface PlacaDeVideo extends ProdutoBase {
-  tipoProduto: 'PLACA_VIDEO';
-  memoriaVRAM: number;
-  chipset: string;
-}
-
-export interface DispositivoDeArmazenamento extends ProdutoBase {
-  tipoProduto: 'ARMAZENAMENTO';
-  capacidadeGB: number;
-  tipo: 'HDD' | 'SSD' | 'NVME';
-}
-
-export interface Memoria extends ProdutoBase {
-  tipoProduto: 'MEMORIA';
-  capacidadeGB: number;
-  tipo: 'DDR4' | 'DDR5';
-}
-
-export type Produto = CPU | PlacaDeVideo | DispositivoDeArmazenamento | Memoria;

@@ -1,18 +1,41 @@
-import { Fornecedor } from './fornecedor.models';
-import { ProdutoBase } from './produto.models';
+export type VendaStatus = 'PENDENTE' | 'CONFIRMADA' | 'CANCELADA' | 'ENTREGUE';
 
-export interface ItemVenda {
-  produto: ProdutoBase;
+export interface VendaItem {
+  produtoId: number;
+  nome?: string;
   quantidade: number;
   precoUnitario: number;
-  fornecedor: Fornecedor;
+  subtotal?: number;
+}
+
+export interface PagamentoInfo {
+  tipo: 'DINHEIRO' | 'CARTAO' | 'PIX' | 'OUTRO';
+  status: 'PENDENTE' | 'APROVADO' | 'CANCELADO';
+  detalhes?: string;
 }
 
 export interface Venda {
   id: number;
-  dataHora: string;
-  status: 'ABERTA' | 'CONCLUIDA' | 'CANCELADA';
-  usuario: import('./usuário.models').Usuario;
-  itens: ItemVenda[];
-  total?: number;
+  clienteId?: number;
+  clienteNome?: string;
+  itens: VendaItem[];
+  total: number;
+  desconto?: number;
+  status: VendaStatus;
+  pagamento: PagamentoInfo;
+  criadoEm?: string;
+  atualizadoEm?: string;
+}
+
+export interface VendaCreateRequest {
+  clienteId?: number;
+  itens: VendaItem[];
+  desconto?: number;
+  pagamento: PagamentoInfo;
+}
+
+export interface VendaUpdateRequest {
+  status?: VendaStatus;
+  desconto?: number;
+  pagamento?: Partial<PagamentoInfo>;
 }
