@@ -23,7 +23,7 @@
     <mat-icon [matBadge]="cartCount" matBadgeColor="warn" matBadgeSize="small">shopping_cart</mat-icon>
   </button>
   <button mat-icon-button aria-label="Conta">
-    <mat-icon>person_outline</mat-icon>
+    <mat-icon routerLink="/login">person_outline</mat-icon>
   </button>
 </mat-toolbar>
 
@@ -111,10 +111,8 @@
 
 <footer class="footer">
   <span>© 2025 Hardware Store. Todos os direitos reservados.</span>
+
   <div class="footer-links">
     <a routerLink="/sobre">Sobre</a>
-    <a routerLink="/contato">Contato</a>
-    <a routerLink="/privacidade">Privacidade</a>
-    <a routerLink="/devolucao">Devolução</a>
   </div>
 </footer>

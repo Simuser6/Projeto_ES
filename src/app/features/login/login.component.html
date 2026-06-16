@@ -1,0 +1,41 @@
+<div class="login-container">
+  
+    <button mat-icon-button routerLink="/" aria-label="Voltar para a página inicial">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  
+    <mat-card class="login-card">
+
+    <div class="logo">
+      <mat-icon>build</mat-icon>
+      <h1>Hardware Store</h1>
+    </div>
+
+    <h2>Entrar</h2>
+    <p class="subtitle">Acesse sua conta para continuar.</p>
+
+    <form>
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" placeholder="Digite seu e-mail">
+        <mat-icon matSuffix>mail</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" placeholder="Digite sua senha">
+        <mat-icon matSuffix>lock</mat-icon>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" class="login-button">
+        Entrar
+      </button>
+    </form>
+
+    <div class="links">
+      <a routerLink="/cadastro">Criar conta</a>
+      <a routerLink="/esqueci-senha">Esqueci minha senha</a>
+    </div>
+
+  </mat-card>
+</div>
