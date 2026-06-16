@@ -2,7 +2,7 @@
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductMockService } from '../../core/services/product-mock.service';
+import { ProductService } from '../../core/services/product.service';
 import { Produto } from '../../core/models/produto.models';
 import { MaterialModule } from '../../shared/material/material.module';
 
@@ -21,7 +21,7 @@ export class ProductComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductMockService
+    private productService: ProductService
   ) {}
 
   ngOnInit() {

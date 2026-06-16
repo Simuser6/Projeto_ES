@@ -3,18 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Produto, Produto2, ProdutoBase } from '../models/produto.models';
 import { environment } from '../../../environments/environment';
-import { ProductMockService } from '../../core/services/product-mock.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/produtos`;
 
-  constructor(
-    private http: HttpClient,
-    private route: ActivatedRoute,
-    private productService: ProductMockService
-  ) {}
+  constructor(private http: HttpClient) {}
   
   getProdutos(): Observable<Produto[]> {
     return this.http.get<Produto[]>(this.apiUrl);
