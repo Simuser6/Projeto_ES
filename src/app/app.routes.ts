@@ -7,6 +7,7 @@ import { LoginComponent } from './features/login/login.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'produtos', component: CategoriaComponent },
   { path: 'produtos/:id', component: ProductComponent },
   { path: 'categoria/:nome', component: CategoriaComponent },
   { path: 'categorias', component: CategoriaComponent },

@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { Injectable, PLATFORM_ID, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
@@ -9,6 +10,7 @@ import { Usuario } from "../models/usuario.models";
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private usuarioLogadoSubject = new BehaviorSubject<Usuario | null>(this.getUsuarioAtual());
   usuarioLogado$ = this.usuarioLogadoSubject.asObservable();
 
@@ -18,11 +20,7 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          localStorage.setItem('authToken', response.accessToken);
-          if (response.refreshToken) {
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
-          localStorage.setItem('usuario', JSON.stringify(response.user));
+          this.setSession(response);
           this.usuarioLogadoSubject.next(response.user);
         })
       );
@@ -32,17 +30,18 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/registrar`, userData)
       .pipe(
         tap(response => {
-          localStorage.setItem('authToken', response.accessToken);
-          if (response.refreshToken) {
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
-          localStorage.setItem('usuario', JSON.stringify(response.user));
+          this.setSession(response);
           this.usuarioLogadoSubject.next(response.user);
         })
       );
   }
 
   logout(): void {
+    if (!this.isBrowser) {
+      this.usuarioLogadoSubject.next(null);
+      return;
+    }
+
     localStorage.removeItem('authToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('usuario');
@@ -50,6 +49,10 @@ export class AuthService {
   }
 
   getToken(): string | null {
+    if (!this.isBrowser) {
+      return null;
+    }
+
     return localStorage.getItem('authToken');
   }
 
@@ -58,11 +61,19 @@ export class AuthService {
   }
 
   getUsuarioAtual(): Usuario | null {
+    if (!this.isBrowser) {
+      return null;
+    }
+
     const usuarioJson = localStorage.getItem('usuario');
     return usuarioJson ? JSON.parse(usuarioJson) as Usuario : null;
   }
 
   refreshToken(): Observable<LoginResponse> {
+    if (!this.isBrowser) {
+      throw new Error('Refresh token not available outside browser');
+    }
+
     const refreshToken = localStorage.getItem('refreshToken');
     if (!refreshToken) {
       throw new Error('Refresh token not found');
@@ -70,15 +81,24 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/refresh`, { refreshToken } as RefreshTokenRequest)
       .pipe(
         tap(response => {
-          localStorage.setItem('authToken', response.accessToken);
-          if (response.refreshToken) {
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
+          this.setSession(response);
         })
       );
   }
 
   logoutRemote(): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/logout`, {});
+  }
+
+  private setSession(response: LoginResponse): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    localStorage.setItem('authToken', response.accessToken);
+    if (response.refreshToken) {
+      localStorage.setItem('refreshToken', response.refreshToken);
+    }
+    localStorage.setItem('usuario', JSON.stringify(response.user));
   }
 }
