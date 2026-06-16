@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { Produto } from '../../core/models/produto.models';
 import { Categoria } from '../../core/models/categoria.models';
 import { ProductService } from '../../core/services/product.service';
@@ -7,19 +7,22 @@ import { MatCard, MatCardContent } from "@angular/material/card";
 import { MatIcon } from "@angular/material/icon";
 import { DecimalPipe, CommonModule } from '@angular/common';
 import { MaterialModule } from '../../shared/material/material.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-categoria',
   standalone: true,
-  imports: [CommonModule, RouterModule, MaterialModule, DecimalPipe],
+  imports: [CommonModule, RouterModule, MaterialModule, DecimalPipe, MatProgressSpinnerModule, MatToolbarModule],
   templateUrl: './categoria.component.html',
   styleUrls: ['./categoria.component.scss']
 })
-
 export class CategoriaComponent implements OnInit {
   nomeCategoria = '';
   produtos: Produto[] = [];
   carregando = false;
+  erro = '';
+  
   categorias: Categoria[] = [
     { nome: 'Placa-Mãe',       quantidade: 142, icon: 'developer_board', bgColor: '#FFF0E6', iconColor: '#E8650A' },
     { nome: 'Placas de Vídeo', quantidade: 387, icon: 'memory',          bgColor: '#F0EDE8', iconColor: '#3A3A3C' },
@@ -33,6 +36,7 @@ export class CategoriaComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private produtoService: ProductService
   ) {}
 
@@ -56,18 +60,50 @@ export class CategoriaComponent implements OnInit {
     }
 
     this.carregando = true;
-    this.produtoService.getPorCategoria(this.nomeCategoria).subscribe((produtos: Produto[]) => {
-      this.produtos = produtos;
-      this.carregando = false;
+    this.erro = '';
+    
+    this.produtoService.getPorCategoria(this.nomeCategoria).subscribe({
+      next: (produtos: Produto[]) => {
+        this.produtos = produtos || [];
+        this.carregando = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar produtos:', error);
+        this.erro = 'Não foi possível carregar os produtos.';
+        this.produtos = [];
+        this.carregando = false;
+      }
     });
   }
 
   selecionarCategoria(categoria: string) {
-    this.nomeCategoria = categoria;
-    this.carregarProdutos();
+    this.router.navigate(['/categoria', categoria]);
+  }
+
+  pesquisar() {
+    // Integrar com SearchService no futuro
   }
 
   adicionarAoCarrinho(prod: Produto) {
-    // integrar com CartService
+    // Integrar com CartService no futuro
+    if (prod.quantidadeDisponivel && prod.quantidadeDisponivel > 0) {
+      alert(`Adicionado "${prod.nome}" ao carrinho!`);
+    }
+  }
+
+  getEmojiFromCategoria(categoria?: string): string {
+    if (!categoria) return '📦';
+    
+    const cat = categoria.toLowerCase();
+    if (cat.includes('placa') && cat.includes('mãe')) return '🖥️';
+    if (cat.includes('video') || cat.includes('gpu') || cat.includes('gráfica')) return '🎮';
+    if (cat.includes('processador') || cat.includes('cpu')) return '⚙️';
+    if (cat.includes('memoria') || cat.includes('ram')) return '🧠';
+    if (cat.includes('ssd') || cat.includes('nvme')) return '💾';
+    if (cat.includes('hdd') || cat.includes('disco')) return '🗄️';
+    if (cat.includes('monitor')) return '🖨️';
+    if (cat.includes('cabo')) return '🔌';
+    
+    return '📦';
   }
 }

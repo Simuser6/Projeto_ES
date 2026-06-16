@@ -11,15 +11,10 @@ import { Categoria } from '../../core/models/categoria.models';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [MatIcon, 
-    MatCard, 
-    MatCardContent, 
-    CommonModule, 
-    RouterModule,
-    MatToolbar, 
-    MatBadgeModule]
+  imports: [MatIcon, MatCard, MatCardContent, CommonModule, RouterModule, MatToolbar, MatBadgeModule, MatIcon]
 })
 export class HomeComponent {
   cartCount = 3;
