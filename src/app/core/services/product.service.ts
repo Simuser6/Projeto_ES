@@ -2,14 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Produto, Produto2, ProdutoBase } from '../models/produto.models';
-import { environment } from '../../../envirolment/envirolment';
+import { environment } from '../../../environments/environment';
+import { ProductMockService } from '../../core/services/product-mock.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/produtos`;
 
-  constructor(private http: HttpClient) {}
-
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private productService: ProductMockService
+  ) {}
+  
   getProdutos(): Observable<Produto[]> {
     return this.http.get<Produto[]>(this.apiUrl);
   }
@@ -18,26 +24,26 @@ export class ProductService {
     return this.http.get<Produto2[]>(`${this.apiUrl}?categoria=${encodeURIComponent(nomeCategoria)}`);
   }
 
-  getProdutosPorSku(sku: string): Observable<Produto[]> {
-    return this.http.get<Produto[]>(`${this.apiUrl}?sku=${sku}`);
+  getProdutoPorId(id: number): Observable<Produto> {
+    return this.http.get<Produto>(`${this.apiUrl}/${id}`);
+  }
+
+  getProdutoPorSku(sku: string): Observable<Produto> {
+    return this.http.get<Produto>(`${this.apiUrl}/sku/${encodeURIComponent(sku)}`);
   }
   
   createProduto(produto: ProdutoBase): Observable<Produto> {
     return this.http.post<Produto>(this.apiUrl, produto);
   }
 
-  updateProduto(sku: string, produto: ProdutoBase): Observable<Produto> {
-    return this.http.put<Produto>(`${this.apiUrl}/${sku}`, produto);
+  updateProduto(id: number, produto: ProdutoBase): Observable<Produto> {
+    return this.http.put<Produto>(`${this.apiUrl}/${id}`, produto);
   }
 
-  deleteProduto(sku: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${sku}`);
+  deleteProduto(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  getProdutoPorSku(sku: string): Observable<Produto> {
-    return this.http.get<Produto>(`${this.apiUrl}/${sku}`);
-  }
-  
   searchProdutos(term: string): Observable<Produto[]> {
     return this.http.get<Produto[]>(`${this.apiUrl}/search?query=${term}`);
   }

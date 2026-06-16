@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Produto } from '../../../app/core/models/produto.models';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../envirolment/envirolment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class StockService {
@@ -14,20 +14,19 @@ export class StockService {
     return this.http.get<Produto[]>(this.apiUrl);
   }
 
-  getEstoquePorSku(sku: string): Observable<Produto[]> {
-    return this.http.get<Produto[]>(`${this.apiUrl}?sku=${sku}`);
+  getCriticos(): Observable<Produto[]> {
+    return this.http.get<Produto[]>(`${this.apiUrl}/criticos`);
   }
 
-  adjustQuantidade(sku: string, quantidade: number): Observable<Produto> {
-    return this.http.patch<Produto>(`${this.apiUrl}/${sku}/ajustar-quantidade`, { quantidade });
+  getEstoquePorProduto(produtoId: number): Observable<Produto[]> {
+    return this.http.get<Produto[]>(`${this.apiUrl}/produto/${produtoId}`);
   }
 
-  registrarEntrada(sku: string, quantidade: number): Observable<Produto> {
-    return this.http.post<Produto>(`${this.apiUrl}/${sku}/entrada`, { quantidade });
+  createEstoque(produtoId: number, quantidade: number, estoqueMinimo: number): Observable<Produto> {
+    return this.http.post<Produto>(this.apiUrl, { produtoId, quantidade, estoque_minimo: estoqueMinimo });
   }
 
-  registrarSaida(sku: string, quantidade: number): Observable<Produto> {
-    return this.http.post<Produto>(`${this.apiUrl}/${sku}/saida`, { quantidade });
+  reporEstoque(produtoId: number, quantidade: number): Observable<Produto> {
+    return this.http.post<Produto>(`${this.apiUrl}/${produtoId}/repor`, { quantidade });
   }
-  
 }

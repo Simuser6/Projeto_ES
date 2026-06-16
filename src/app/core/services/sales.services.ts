@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Venda, ItemVenda } from '../models/venda.models';
-import { environment } from '../../../envirolment/envirolment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class SalesService {
@@ -22,11 +22,16 @@ export class SalesService {
     return this.http.post<Venda>(this.apiUrl, venda);
   }
 
-  updateVenda(id: number, venda: Partial<Venda>): Observable<Venda> {
-    return this.http.put<Venda>(`${this.apiUrl}/${id}`, venda);
+  confirmVenda(id: number): Observable<Venda> {
+    return this.http.post<Venda>(`${this.apiUrl}/${id}/confirm`, {});
   }
 
-  deleteVenda(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  getVendasPorStatus(status: string): Observable<Venda[]> {
+    return this.http.get<Venda[]>(`${this.apiUrl}/status/${encodeURIComponent(status)}`);
+  }
+
+  cancelarVenda(id: number, motivo?: string): Observable<void> {
+    const body = motivo ? { motivo } : {};
+    return this.http.post<void>(`${this.apiUrl}/${id}/cancel`, body);
   }
 }

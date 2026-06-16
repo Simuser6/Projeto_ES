@@ -25,6 +25,18 @@ export class AuthService {
       );
   }
 
+  registrar(credentials: any): Observable<Usuario> {
+    return this.http.post<{ token: string; usuario: Usuario }>(`${this.apiUrl}/auth/registrar`, credentials)
+      .pipe(
+        tap(response => {
+          localStorage.setItem('authToken', response.token);
+          localStorage.setItem('usuario', JSON.stringify(response.usuario));
+          this.usuarioLogadoSubject.next(response.usuario);
+        }),
+        map(response => response.usuario)
+      );
+  }
+
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('usuario');
